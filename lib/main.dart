@@ -24,13 +24,14 @@ void main(List<String> args) {
   //     .catchError((error) => print(error));
 
 //Cách 2
-  handle(numberA, numberB).then((value) => print(value));
+  calculator(numberA, numberB).then((value) => print(value));
 }
 
 //Cách 1
 Future<int> plus(int a, int b) {
   return Future.delayed(Duration(seconds: 1), () {
-    return a + b;
+    // return a + b;
+    throw Exception("Lỗi");
   });
 }
 
@@ -50,4 +51,16 @@ Future<int> handle(int numberA, int numberB) {
   });
 
   return completer.future;
+}
+
+//xử lý bất đồng bộ bằng async await
+Future<int> calculator(int a, int b) async {
+  try {
+    var total = await plus(a, b);
+    var result = await plus(total, a);
+    return result;
+  } catch (e) {
+    print(e);
+    return 0;
+  }
 }
