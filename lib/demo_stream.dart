@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:isolate';
 
 void main() {
   //Stream
@@ -44,13 +45,27 @@ void main() {
 
   // StreamController
 
-  StreamController<String> stringController = StreamController();
+  // StreamController<String> stringController = StreamController();
 
-  stringController.stream.listen((event) {
-    print(event);
+  // stringController.stream.listen((event) {
+  //   print(event);
+  // });
+
+  // Future.delayed(Duration(seconds: 2), () {
+  //   stringController.sink.add("Tèo");
+  // });
+
+  // StreamTranformer
+
+  Stream<int> streamPeriodic =
+      Stream.periodic(Duration(seconds: 1), (compuration) {
+    return compuration;
   });
 
-  Future.delayed(Duration(seconds: 2), () {
-    stringController.sink.add("Tèo");
-  });
+  streamPeriodic.transform(StreamTransformer.fromHandlers(
+    handleData: (element, sink) {
+      print(Isolate.current.debugName);
+      sink.add("Count ${element + 1}");
+    },
+  )).listen((event) => print(event));
 }
